@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CategoriesTests extends BaseTest{
 
 
+
     @ParameterizedTest
     @EnumSource(value = ru.geekbrains.enums.Category.class)
     void getFoodCategoryTest(ru.geekbrains.enums.Category category) throws IOException {

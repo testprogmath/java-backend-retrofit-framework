@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
+import ru.geekbrains.db.model.Products;
+import ru.geekbrains.db.model.ProductsExample;
 import ru.geekbrains.dto.Product;
 import ru.geekbrains.enums.Category;
 
@@ -21,8 +23,10 @@ public class ProductsTest extends BaseTest {
     void setUp() {
        product=  new Product()
                 .withTitle(faker.food().dish())
-                .withCategoryTitle(Category.FOOD.getName())
-                .withPrice(1000);
+                .withCategoryTitle(testCategory.getTitle())
+                .withPrice(1001);
+
+
     }
 
     @Test
@@ -35,6 +39,11 @@ public class ProductsTest extends BaseTest {
         assertThat(response.body().getTitle()).isEqualTo(product.getTitle());
         assertThat(response.body().getPrice()).isEqualTo(product.getPrice());
         assertThat(response.body().getId()).isNotNull();
+        //выделить в отдельный метод
+        ProductsExample example = new ProductsExample();
+        example.createCriteria().andCategory_idEqualTo(Long.valueOf(testCategory.getId())).andPriceEqualTo(1001);
+        Products productFromDb = productsMapper.selectByExample(example).get(0);
+        assertThat(productFromDb.getPrice()).isEqualTo(product.getPrice());
     }
 
     @AfterEach
